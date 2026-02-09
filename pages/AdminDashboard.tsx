@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Product, User, Order, SiteSettings, OrderStatus } from '../types';
@@ -6,7 +5,7 @@ import {
   LayoutDashboard, ShoppingCart, Settings, X, Loader2, 
   Plus, Edit, Trash2, Users, Package, DollarSign, 
   Ban, CheckCircle, Search, Save, Image as ImageIcon,
-  AlertTriangle, Mail, Truck, Clock, ShoppingBag, Shield, Menu, RefreshCcw
+  AlertTriangle, Mail, Truck, Clock, ShoppingBag, Shield, Menu, RefreshCcw, Upload
 } from 'lucide-react';
 import { supabase } from '../supabase';
 import { INITIAL_SETTINGS, INITIAL_PRODUCTS } from '../constants';
@@ -45,6 +44,7 @@ const AdminDashboard: React.FC<AdminProps> = ({
     name: '', price: 0, description: '', image: '', type: 'ACCOUNT', stockQuantity: 1,
     level: 1, fruitsInput: '', rareItemsInput: ''
   });
+  const [uploading, setUploading] = useState(false);
 
   // Search State
   const [searchTerm, setSearchTerm] = useState('');
@@ -203,6 +203,40 @@ const AdminDashboard: React.FC<AdminProps> = ({
       alert('خطأ: ' + err.message);
     } finally {
       if (isMounted.current) setIsProcessing(false);
+    }
+  };
+
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    try {
+      if (!event.target.files || event.target.files.length === 0) {
+        return;
+      }
+      setUploading(true);
+      const file = event.target.files[0];
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Math.random().toString(36).substring(2, 15)}_${Date.now()}.${fileExt}`;
+      const filePath = `${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('product-images')
+        .upload(filePath, file);
+
+      if (uploadError) {
+        if (uploadError.message.includes("The resource was not found") || uploadError.message.includes("Bucket not found")) {
+             throw new Error("سلة التخزين 'product-images' غير موجودة. يرجى مراجعة ملف supabase.ts لتشغيل كود SQL لإنشاء السلة.");
+        }
+        throw uploadError;
+      }
+
+      const { data } = supabase.storage.from('product-images').getPublicUrl(filePath);
+      
+      setFormData({ ...formData, image: data.publicUrl });
+      showSuccess('تم رفع الصورة بنجاح');
+      
+    } catch (error: any) {
+      alert('خطأ في رفع الصورة: ' + error.message);
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -737,9 +771,24 @@ const AdminDashboard: React.FC<AdminProps> = ({
 
               <div>
                 <label className="text-xs font-bold text-gray-500 mb-2 block mr-2">صورة المنتج</label>
-                <div className="relative">
-                  <ImageIcon size={20} className="absolute top-3 left-4 text-gray-600" />
-                  <input required type="text" value={formData.image} onChange={e => setFormData({...formData, image: e.target.value})} className="w-full pl-12 pr-5 py-3 rounded-2xl bg-[#1a1a1a] border border-gray-800 outline-none focus:border-blue-600 text-left text-white placeholder-gray-600" placeholder="https://..." />
+                <div className="space-y-3">
+                    <div className="relative">
+                        <ImageIcon size={20} className="absolute top-3 left-4 text-gray-600" />
+                        <input required type="text" value={formData.image} onChange={e => setFormData({...formData, image: e.target.value})} className="w-full pl-12 pr-5 py-3 rounded-2xl bg-[#1a1a1a] border border-gray-800 outline-none focus:border-blue-600 text-left text-white placeholder-gray-600" placeholder="رابط الصورة أو قم بالرفع..." />
+                    </div>
+                    
+                    <div className="flex items-center gap-4">
+                        <label className={`flex-1 cursor-pointer bg-[#151515] border border-dashed border-gray-700 hover:border-blue-500 hover:bg-[#1a1a1a] transition-all rounded-2xl p-4 flex flex-col items-center justify-center gap-2 text-gray-400 hover:text-blue-500 ${uploading ? 'opacity-50 pointer-events-none' : ''}`}>
+                            {uploading ? <Loader2 className="animate-spin" size={24} /> : <Upload size={24} />}
+                            <span className="text-xs font-bold">{uploading ? 'جاري الرفع...' : 'اضغط لرفع صورة'}</span>
+                            <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" disabled={uploading} />
+                        </label>
+                        {formData.image && (
+                            <div className="w-20 h-20 rounded-2xl bg-[#111] border border-gray-800 overflow-hidden relative group">
+                                <img src={formData.image} alt="Preview" className="w-full h-full object-cover" />
+                            </div>
+                        )}
+                    </div>
                 </div>
               </div>
 
