@@ -170,7 +170,7 @@ ${itemsList}
           <span className="text-[10px] font-black uppercase tracking-widest">المتجر الرسمي</span>
         </div>
         <h1 className="text-5xl md:text-7xl font-black text-white tracking-tighter">
-          سوق <span className="text-blue-600 drop-shadow-[0_0_10px_rgba(37,99,235,0.5)]">Blox Fruits</span>
+          سوق <span className="text-blue-600 drop-shadow-[0_0_10px_rgba(37,99,235,0.5)]">Bloxon</span>
         </h1>
         <p className="text-gray-500 font-bold max-w-2xl mx-auto leading-relaxed">
           حسابات ليفل ماكس، وأساليب قتالية، وسيوف نادرة. تسليم آمن وسريع 100%.
