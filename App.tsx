@@ -13,7 +13,7 @@ import { INITIAL_PRODUCTS, INITIAL_SETTINGS } from './constants';
 import { supabase } from './supabase';
 import { useLanguage } from './LanguageContext';
 
-const LOGO_URL = "https://api.a0.dev/assets/image?text=professional%20logo%20named%20BLOX%20STORE%20with%20isometric%203D%20cubes%20in%20blue%20orange%20and%20green%20surrounded%20by%20a%20circular%20tech%20circuitry%20pattern%20clean%20black%20background";
+const LOGO_URL = "https://api.a0.dev/assets/image?text=Bloxon%20logo%20purple%20devil%20fruit%20gold%20circle%20coins%20dark%20background%20vector%20style";
 
 // Custom Social Icons
 const TikTokIcon = ({ size = 24, className = "" }: { size?: number, className?: string }) => (
@@ -370,9 +370,9 @@ const App: React.FC = () => {
       <header className="sticky top-0 z-50 bg-[#0a0a0a]/90 backdrop-blur-md border-b border-blue-900/20 shadow-lg shadow-blue-900/5">
         <div className="max-w-7xl mx-auto px-4 h-24 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-4">
-            <img src={LOGO_URL} alt="Blox Store Logo" className="h-16 w-16 object-contain rounded-2xl p-1 bg-black/50 border border-blue-900/30" />
+            <img src={LOGO_URL} alt="Bloxon Logo" className="h-16 w-16 object-contain rounded-2xl p-1 bg-black/50 border border-blue-900/30" />
             <div className={`flex flex-col ${dir === 'rtl' ? 'text-right' : 'text-left'}`}>
-              <span className="text-2xl font-black text-white tracking-tighter">BLOX <span className="text-blue-600">STORE</span></span>
+              <span className="text-2xl font-black text-white tracking-tighter">Blox<span className="text-blue-600">on</span></span>
               <span className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Marketplace</span>
             </div>
           </Link>
@@ -541,7 +541,7 @@ const App: React.FC = () => {
             <Link to="/shop" className="hover:text-blue-500 transition-colors">{t('nav_shop')}</Link>
             <Link to="/about" className="hover:text-blue-500 transition-colors">{t('nav_about')}</Link>
         </div>
-        &copy; {new Date().getFullYear()} Blox Store Market. {t('footer_rights')}.
+        &copy; {new Date().getFullYear()} Bloxon Market. {t('footer_rights')}.
       </footer>
     </div>
   );
