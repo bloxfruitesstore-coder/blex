@@ -395,7 +395,7 @@ const AdminDashboard: React.FC<AdminProps> = ({
         </nav>
         
         <div className="mt-auto pt-6 border-t border-gray-900 text-center text-gray-600 text-xs font-mono">
-          BLOX STORE v2.1
+          BLOXON v2.1
         </div>
       </aside>
 
